@@ -1,28 +1,28 @@
-
 from PIL import Image
 
-#Loading the image in
+# Loading the image
+im = Image.open(r'C:\Users\Luca\Pictures\cat.webp')
 
-im = Image.open(r'C:\Users\Luca\Pictures\monalisa.jpg')
-print(im.format, im.size, im.mode)
+# Resizing
+new_width = 200
+ratio = im.height / im.width
+new_height = int(new_width * ratio * 0.5)
+im = im.resize((new_width, new_height))
 
-# resizing and grayscalling
-
-newsize = (100, 100)
-im = im.resize(newsize)
-# grayscale
-im = im.convert('L') 
+# Grayscaling
+im = im.convert('L')
 WIDTH, HEIGHT = im.size
 
-
-#assigning ascii characters to graysclae pixel values
-
-data = list(im.getdata()) 
-
+# Mapping grayscale pixels to ASCII characters
+data = list(im.getdata())
 data = [data[offset:offset+WIDTH] for offset in range(0, WIDTH*HEIGHT, WIDTH)]
 
-ascii_chars = "@$%#*+=-:."
-scale = (len(ascii_chars)-1)/255.
-print()
-for row in data:
-    print(''.join(ascii_chars[int(value*scale)] for value in row))
+ascii_chars = "@$%#*+=-:. "
+
+# Scaling factor for ASCII characters
+scale = (len(ascii_chars)-1) / 255.0
+
+# Generating ASCII art
+with open("output.txt", "w") as file:
+    for row in data:
+        file.write("".join(ascii_chars[int(value * scale)] for value in row) + "\n")
